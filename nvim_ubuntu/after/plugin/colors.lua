@@ -3,7 +3,8 @@ DARK_MODE = 1
 
 require("catppuccin").setup({
     flavour = "mocha", -- latte, frappe, macchiato, mocha
-    background = { -- :h background
+    background = {
+                       -- :h background
         light = "latte",
         dark = "mocha",
     },
@@ -16,7 +17,7 @@ require("catppuccin").setup({
         percentage = 0.15,
     },
     no_italic = true, -- Force no italic
-    no_bold = false, -- Force no bold
+    no_bold = false,  -- Force no bold
     styles = {
         comments = { "italic" },
         conditionals = { "italic" },
@@ -40,12 +41,12 @@ require("catppuccin").setup({
         telescope = true,
         notify = false,
         mini = false,
-        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+        mason = true,
     },
 })
 
 function ColorMyPencils(color, mode, transp)
-	color = color or "catppuccin-macchiato"
+    color = color or "catppuccin-macchiato"
 
     if mode == DARK_MODE then
         mode = "light"
@@ -62,8 +63,8 @@ function ColorMyPencils(color, mode, transp)
         vim.cmd("let g:gruvbox_italic = '1'")
         vim.cmd("let g:gruvbox_contrast_light = 'soft'")
     end
-    
-    if transp == 1 then 
+
+    if transp == 1 then
         vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
     end
