@@ -70,4 +70,15 @@ return require('packer').startup(function(use)
     })
 
     use('MunifTanjim/prettier.nvim')
+
+    use({
+        "folke/trouble.nvim",
+        config = function()
+            require("trouble").setup {}
+        end
+    })
+
+    use 'nvim-tree/nvim-web-devicons'
+
+    use("folke/zen-mode.nvim")
 end)

@@ -2,11 +2,15 @@ local lsp = require('lsp-zero').preset({
     name = 'minimal',
     set_lsp_keymaps = true,
     manage_nvim_cmp = true,
-    suggest_lsp_servers = false,
+    suggest_lsp_servers = true,
 })
 
 lsp.format_on_save({
+    format_opts = {
+        timeout_ms = 10000,
+    },
     servers = {
+        ['null-ls'] = { 'javascript', 'typescript' },
         ['lua_ls'] = { 'lua' },
         ['rust_analyzer'] = { 'rust' },
     }
@@ -18,14 +22,35 @@ lsp.ensure_installed({
     'rust_analyzer',
 })
 
-lsp.configure('lua-language-server', {
+lsp.configure('tsserver', {
+    settings = {
+        completions = {
+            completeFunctionCalls = true
+        },
+        diagnostics = {
+            -- see link for full list https://github.com/microsoft/TypeScript/blob/main/src/compiler/diagnosticMessages.json
+            ignoredCodes = {
+                80001, -- ignores "File is a CommonJS module; it may be converted to an ES module."
+                80005, -- ignores "'require' call may be converted to an import."
+            },
+        }
+    }
+})
+
+lsp.configure('eslint', {})
+
+-- Fix Undefined global 'vim'
+lsp.configure('lua_ls', {
     settings = {
         Lua = {
             diagnostics = {
-                globals = { 'vim' }
-            }
-        }
-    }
+                globals = { 'vim' },
+            },
+            telemetry = {
+                enable = false,
+            },
+        },
+    },
 })
 
 local cmp = require('cmp')
@@ -48,8 +73,8 @@ lsp.set_preferences({
     sign_icons = {
         error = '❌',
         warn = '💦',
-        hint = '❔',
-        info = '💬',
+        hint = '💡',
+        info = '📚',
     }
 })
 
@@ -71,5 +96,23 @@ end)
 lsp.setup()
 
 vim.diagnostic.config({
-    virtual_text = true
+    virtual_text = true,
+})
+
+local null_ls = require('null-ls')
+local null_opts = lsp.build_options('null-ls', {})
+
+null_ls.setup({
+    on_attach = function(client, bufnr)
+        null_opts.on_attach(client, bufnr)
+        ---
+        -- you can add other stuff here....
+        ---
+    end,
+    sources = {
+        -- Replace these with the tools you have installed
+        null_ls.builtins.formatting.prettier,
+        -- null_ls.builtins.diagnostics.eslint,
+        -- null_ls.builtins.formatting.stylua,
+    }
 })

@@ -14,3 +14,4 @@ let g:clipboard = {
   \   'cache_enabled': 0,
   \ }
 
+let g:netrw_altv=1
